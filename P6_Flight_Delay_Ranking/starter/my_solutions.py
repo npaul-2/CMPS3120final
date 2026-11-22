@@ -15,7 +15,7 @@ def solve_insertion(inst):
 
     Return: a list of flight ids, worst delay first (equal delays keep file order).
     """
-    #raise NotImplementedError("write the insertion technique here")
+    """raise NotImplementedError("write the insertion technique here")"""
 
     ordered = []
     for flight_id, delay in zip(inst["ids"], inst["delay"]):
@@ -39,8 +39,33 @@ def solve_heap(inst):
 
     Return: a list of flight ids, worst delay first (equal delays keep file order).
     """
-    raise NotImplementedError("write the heap technique here")
+    """raise NotImplementedError("write the heap technique here")"""
+    items = [(-delay, i, flight_id)
+              for i, (flight_id, delay) in enumerate(zip(inst["ids"], inst["delay"]))]
+    n = len(items)
 
+    def sift_down(root, end):
+        while True:
+            child = 2 * root + 1
+            if child > end:
+                break
+            if child + 1 <= end and items[child] < items[child + 1]:
+                child += 1
+            if items[root] < items[child]:
+                items[root], items[child] = items[child], items[root]
+                root = child
+            else:
+                break
+    # Build the heap
+    for start in range(n // 2 - 1, -1, -1):
+        sift_down(start, n)
+
+    # Extract elements from the heap
+    for end in range(n - 1, 0, -1): 
+        items[end], items[0] = items[0], items[end]
+        sift_down(0, end)  
+
+    return [flight_id for _, _, flight_id in items]  
 
 def solve_counting(inst):
     """Space-time trade-off (counting sort).
