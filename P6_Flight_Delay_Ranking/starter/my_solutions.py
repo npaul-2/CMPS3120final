@@ -45,17 +45,15 @@ def solve_heap(inst):
     n = len(items)
 
     def sift_down(root, end):
-        while True:
+        while 2 * root + 1 < end:
             child = 2 * root + 1
-            if child > end:
-                break
-            if child + 1 <= end and items[child] < items[child + 1]:
+            if child + 1 < end and items[child] < items[child + 1]:
                 child += 1
-            if items[root] < items[child]:
-                items[root], items[child] = items[child], items[root]
-                root = child
-            else:
+            if items[root] >= items[child]:
                 break
+            items[root], items[child] = items[child], items[root]
+            root = child
+                
     # Build the heap
     for start in range(n // 2 - 1, -1, -1):
         sift_down(start, n)
